@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { reducer } from "./src/state/root-reducer";
-import { handler as swapSaga } from "./src/state/swap/sagas";
 import { createLogger, LogEntryObject } from "redux-logger";
+import swapSaga from "./src/state/swap/sagas";
 
 declare global {
   interface Window {

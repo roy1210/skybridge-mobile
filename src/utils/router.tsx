@@ -5,15 +5,15 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import SwapScreen from "../screens/SwapScreen";
 import ExplorerScreen from "../screens/ExplorerScreen";
 import { Platform } from "react-native";
-import Colors from "../constants/Colors";
+import { Colors } from "../data/colors";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 
 const defaultStackNavOptions = {
   headerStyle: {
-    backgroundColor: Platform.OS === "android" ? Colors.primaryColor : "",
+    backgroundColor: Platform.OS === "android" ? Colors.primaryColor : "grey",
   },
-  headerTintColor: Platform.OS === "android" ? "white" : Colors.primaryColor,
+  headerTintColor: "white",
 };
 
 const SwapStack = createStackNavigator(
@@ -74,7 +74,11 @@ const MainStack =
       })
     : createBottomTabNavigator(tabScreenConfig, {
         tabBarOptions: {
-          activeTintColor: Colors.accentColor,
+          activeTintColor: "white",
+          inactiveTintColor: "black",
+          style: {
+            backgroundColor: "grey",
+          },
         },
       });
 

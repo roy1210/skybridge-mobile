@@ -16,9 +16,7 @@ ExplorerScreen.navigationOptions = () => {
 };
 
 const styles = StyleSheet.create({
-  text: {
-    fontFamily: "open-sans-bold",
-  },
+  text: {},
 });
 
 export default ExplorerScreen;
