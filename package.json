@@ -41,6 +41,8 @@
     "eslint": "^7.2.0",
     "eslint-config-react-native-wcandillon": "^3.0.1",
     "jest": "^26.0.1",
+    "react-devtools": "^3",
+    "redux-logger": "^3.0.6",
     "typescript": "~3.8.3"
   },
   "private": true
