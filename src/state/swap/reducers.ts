@@ -1,3 +1,9 @@
+import {
+  INPUT_SENDING_BALANCE,
+  INPUT_RECEIVING_BALANCE,
+  VALIDATE_INPUT,
+  INPUT_RECEIVING_ADDRESS,
+} from "./types";
 import { GET_ALL_USER_INFO_REQUEST_SUCCESS, ADD_NUM } from "./actions";
 import { ActionType, getType } from "typesafe-actions";
 import * as actions from "./actions";
@@ -50,6 +56,25 @@ const reducer = (state = initialState, action) => {
         number: state.number + 1,
       };
     }
+    case INPUT_SENDING_BALANCE: {
+      return { ...state, sendingBalance: Number(action.payload) };
+    }
+    case INPUT_RECEIVING_BALANCE: {
+      return { ...state, receivingBalance: action.payload };
+    }
+    case VALIDATE_INPUT: {
+      return {
+        ...state,
+        isValid: action.result,
+        validationMessage: action.message,
+      };
+    }
+    case INPUT_RECEIVING_ADDRESS: {
+      return {
+        ...state,
+        toWalletAddress: action.payload,
+      };
+    }
     case getType(actions.fetchPriceAsync.request): {
       return { ...state, error: null };
     }
@@ -59,6 +84,17 @@ const reducer = (state = initialState, action) => {
     case getType(actions.fetchPriceAsync.failure): {
       return { ...state, error: action.payload };
     }
+
+    case getType(actions.fetchFeesAsync.request): {
+      return state;
+    }
+    case getType(actions.fetchFeesAsync.success): {
+      return { ...state, fees: action.payload };
+    }
+    case getType(actions.fetchFeesAsync.failure): {
+      return { ...state, error: action.payload };
+    }
+
     default:
       return state;
   }

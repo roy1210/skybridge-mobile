@@ -11,7 +11,9 @@ import React from "react";
 
 const defaultStackNavOptions = {
   headerStyle: {
-    backgroundColor: Platform.OS === "android" ? Colors.primaryColor : "grey",
+    backgroundColor:
+      Platform.OS === "android" ? Colors.primaryColor : Colors.grey,
+    borderBottomColor: Colors.grey,
   },
   headerTintColor: "white",
 };
@@ -77,7 +79,8 @@ const MainStack =
           activeTintColor: "white",
           inactiveTintColor: "black",
           style: {
-            backgroundColor: "grey",
+            backgroundColor: Colors.grey,
+            borderBottomColor: Colors.grey,
           },
         },
       });

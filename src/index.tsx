@@ -1,12 +1,22 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { fetchFeesAsync, fetchPriceAsync } from "./state/swap/actions";
 import { Navigation } from "./utils/router";
 
-const App = () => (
-  <View style={styles.screen}>
-    <Navigation />
-  </View>
-);
+const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchPriceAsync.request());
+    dispatch(fetchFeesAsync.request());
+  }, []);
+
+  return (
+    <View style={styles.screen}>
+      <Navigation />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   screen: {

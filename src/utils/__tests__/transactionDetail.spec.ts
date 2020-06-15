@@ -1,0 +1,55 @@
+import { TxStatus, CoinSymbol } from "../../state/ducks/explorer/types";
+import { transactionDetail } from "./../transactionDetail";
+
+it("should return detail url", () => {
+  expect(
+    transactionDetail(
+      CoinSymbol.BTC,
+      CoinSymbol.BTC_B,
+      "5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497",
+      TxStatus.COMPLETED
+    )
+  ).toStrictEqual(
+    "https://blockstream.info/testnet/tx/5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497"
+  );
+  expect(
+    transactionDetail(
+      CoinSymbol.BTC_B,
+      CoinSymbol.BTC,
+      "5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497",
+      TxStatus.COMPLETED
+    )
+  ).toStrictEqual(
+    "https://testnet-explorer.binance.org/tx/5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497"
+  );
+  expect(
+    transactionDetail(
+      CoinSymbol.BTC_B_918,
+      CoinSymbol.BTC,
+      "5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497",
+      TxStatus.COMPLETED
+    )
+  ).toStrictEqual(
+    "https://testnet-explorer.binance.org/tx/5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497"
+  );
+  expect(
+    transactionDetail(
+      CoinSymbol.BTC_B_918,
+      CoinSymbol.BTC,
+      "5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497",
+      TxStatus.REFUNDED
+    )
+  ).toStrictEqual(
+    "https://blockstream.info/testnet/tx/5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497"
+  );
+  expect(
+    transactionDetail(
+      CoinSymbol.BTC,
+      CoinSymbol.BTC_B_918,
+      "5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497",
+      TxStatus.REFUNDED
+    )
+  ).toStrictEqual(
+    "https://testnet-explorer.binance.org/tx/5cf8f15b09935cbf2c17b2abdbd7a814a76b22cca85e8ae958dc3110eefcd497"
+  );
+});

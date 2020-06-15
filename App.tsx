@@ -10,6 +10,11 @@ import configureStore from "./store";
 import { default as theme } from "./src/data/theme.json";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { IconRegistry } from "@ui-kitten/components";
+import {
+  AppearanceProvider,
+  Appearance,
+  useColorScheme,
+} from "react-native-appearance";
 
 const Root = () => {
   enableScreens();
@@ -32,13 +37,24 @@ const Root = () => {
 
   const initialState = (window as any).initialReduxState;
   const store = configureStore(initialState);
+  Appearance.getColorScheme();
+  const colorScheme = useColorScheme();
 
   return (
     <Provider store={store}>
       <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
-        <App />
-      </ApplicationProvider>
+      <AppearanceProvider>
+        {colorScheme === "dark" ? (
+          <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
+            <App />
+          </ApplicationProvider>
+        ) : (
+          <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
+            {/* <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}> */}
+            <App />
+          </ApplicationProvider>
+        )}
+      </AppearanceProvider>
     </Provider>
   );
 };

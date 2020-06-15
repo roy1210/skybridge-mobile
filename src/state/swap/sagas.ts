@@ -1,20 +1,61 @@
-import { IFetchPriceResponse } from "./types";
+import { REACT_APP_API, REACT_APP_BLOCKCHAIN_INFO } from "react-native-dotenv";
+import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import { get } from "../../utils/apiClient";
+import * as validator from "../../utils/validator";
+import { IApplicationState } from "./../types";
 import {
-  GET_ALL_USER_INFO_REQUEST,
-  GET_ALL_USER_INFO_REQUEST_SUCCESS,
-  GetAllUserInfoRequest,
+  fetchFeesAsync,
   fetchPriceAsync,
+  inputReceivingAmount,
+  inputSendingAmount,
+  validateInput,
 } from "./actions";
-import { get, post } from "../../utils/apiClient";
-import {
-  all,
-  call,
-  put,
-  select,
-  takeLatest,
-  takeEvery,
-} from "redux-saga/effects";
 import * as SwapActionTypes from "./types";
+import { IFetchFees, IFetchPriceResponse } from "./types";
+
+/**
+ * Called when a user inputs sending amount.
+ * 1. Validates the input balance, and updates the Redux state about validation result.
+ * 2. Calculates the receiving balance, and updates the Redux state about the receiving amount.
+ * @param action
+ */
+function* checkSendingBalance(
+  action: ReturnType<typeof inputSendingAmount>
+): Generator {
+  const symbol = yield select(
+    ({ swap }: IApplicationState) => swap.fromCurrency
+  );
+  const balanceString = action.payload;
+  const balance = Number(balanceString);
+
+  const isValidAmountResult = validator.isValidAmount(
+    balance,
+    symbol as string
+  );
+
+  if (!isValidAmountResult.isValid) {
+    yield put(
+      validateInput(
+        isValidAmountResult.isValid,
+        isValidAmountResult.message || ""
+      )
+    );
+  } else {
+    yield put(
+      validateInput(
+        isValidAmountResult.isValid,
+        isValidAmountResult.message || ""
+      )
+    );
+  }
+  // const rate = yield select(({ swap }: IApplicationState) => swap.rate);
+  // const sendingAmount = yield select(
+  //   ({ swap }: IApplicationState) => swap.sendingBalance
+  // );
+  // const calculatedAmount = Number(rate) * Number(sendingAmount);
+  // yield put(inputReceivingAmount(calculatedAmount));
+  yield put(inputReceivingAmount(balanceString));
+}
 
 /**
  * Fetches BTC price.
@@ -23,8 +64,8 @@ import * as SwapActionTypes from "./types";
 function* handleFetchPrice(
   action: ReturnType<typeof fetchPriceAsync.request>
 ): Generator {
-  // const url = BLOCKCHAIN_INFO() + "/ticker";
-  const url = "https://blockchain.info" + "/ticker";
+  const baseUrl = REACT_APP_BLOCKCHAIN_INFO;
+  const url = baseUrl + "/ticker";
   try {
     const res: IFetchPriceResponse | unknown = yield call(get, url);
     // @ts-ignore
@@ -36,28 +77,31 @@ function* handleFetchPrice(
   }
 }
 
-function* getAllUserInfo(
-  action: ReturnType<typeof GetAllUserInfoRequest>
+/**
+ * Calls Swap Fees API.
+ * @param action
+ */
+function* handleFetchFees(
+  action: ReturnType<typeof fetchFeesAsync.request>
 ): Generator {
+  // const url = REST_API() + "/api/v1/swaps/fees";
+  const baseUrl = REACT_APP_API as string;
+  const url = baseUrl + "/api/v1/swaps/fees";
   try {
-    // API call
-    yield put({
-      type: GET_ALL_USER_INFO_REQUEST_SUCCESS,
-      payload: {
-        id: action.payload,
-        name: "Michael22",
-        email: "anothertestemail@test.com",
-        number: 1,
-      },
-    });
+    const res = yield call(get, url);
+    // @ts-ignore
+    const info: IFetchFees = res.parsedBody;
+    yield put(fetchFeesAsync.success(info));
   } catch (err) {
-    // Handle error
+    if (err instanceof Error) {
+      yield put(fetchFeesAsync.failure(err));
+    }
   }
 }
 
 export default function* swapSaga() {
   yield all([
-    // takeLatest(SwapActionTypes.INPUT_SENDING_BALANCE, checkSendingBalance),
+    takeLatest(SwapActionTypes.INPUT_SENDING_BALANCE, checkSendingBalance),
     // takeLatest(
     //   SwapActionTypes.INPUT_RECEIVING_ADDRESS,
     //   handleToWalletAddressInput
@@ -74,7 +118,7 @@ export default function* swapSaga() {
     //   SwapActionTypes.FETCH_DEPOSIT_ADDRESS_REQUEST,
     //   handleFetchDepositAddress
     // ),
-    // takeLatest(SwapActionTypes.FETCH_FEES_REQUEST, handleFetchFees),
+    takeLatest(SwapActionTypes.FETCH_FEES_REQUEST, handleFetchFees),
     // takeLatest(
     //   SwapActionTypes.FETCH_PLATFORM_STATUS_REQUEST,
     //   handlePlatformStatus
