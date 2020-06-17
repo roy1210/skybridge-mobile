@@ -11,9 +11,8 @@ import React from "react";
 
 const defaultStackNavOptions = {
   headerStyle: {
-    backgroundColor:
-      Platform.OS === "android" ? Colors.primaryColor : Colors.grey,
-    borderBottomColor: Colors.grey,
+    backgroundColor: Colors.headerBlack,
+    shadowColor: "transparent",
   },
   headerTintColor: "white",
 };
@@ -48,7 +47,7 @@ const tabScreenConfig = {
       tabBarIcon: (tabInfo) => {
         return <Ionicons name="ios-swap" size={25} color={tabInfo.tintColor} />;
       },
-      tabBarColor: Colors.primaryColor,
+      tabBarColor: Colors.headerBlack,
     },
   },
   Explorer: {
@@ -59,7 +58,7 @@ const tabScreenConfig = {
           <FontAwesome5 name="wpexplorer" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.accentColor,
+      tabBarColor: Colors.darkGrey,
     },
   },
 };
@@ -71,16 +70,17 @@ const MainStack =
         activeTintColor: "white",
         shifting: true,
         barStyle: {
-          backgroundColor: Colors.primaryColor,
+          backgroundColor: Colors.headerBlack,
         },
       })
     : createBottomTabNavigator(tabScreenConfig, {
         tabBarOptions: {
           activeTintColor: "white",
-          inactiveTintColor: "black",
+          inactiveTintColor: "grey",
           style: {
-            backgroundColor: Colors.grey,
-            borderBottomColor: Colors.grey,
+            backgroundColor: Colors.headerBlack,
+            borderTopWidth: 0,
+            paddingTop: 6,
           },
         },
       });

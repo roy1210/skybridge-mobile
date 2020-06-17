@@ -1,4 +1,4 @@
-import { IDepositAddresses } from "./../state/ducks/swap/types";
+import { IDepositAddresses } from "./../state/swap/types";
 
 export const searchTssAddress = (
   addresses: IDepositAddresses,
@@ -6,7 +6,7 @@ export const searchTssAddress = (
 ): string => {
   let tssAddress = "";
   try {
-    addresses.forEach(address => {
+    addresses.forEach((address) => {
       if (address.currency === currency) {
         tssAddress = address.address;
       }

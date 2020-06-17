@@ -1,3 +1,3 @@
 export const toSatoshi = (btcValue: string): number => {
-  return Number(btcValue) * 100000000;
+  return Math.round(Number(btcValue) * 100000000);
 };

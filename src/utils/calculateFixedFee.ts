@@ -15,11 +15,12 @@ export const calculateFixedFee = (
   }
 
   try {
-    feeInfos.forEach((feeInfo) => {
-      if (feeInfo.currency === currency) {
-        fixedFee = toBTC(feeInfo.minerFee);
-      }
-    });
+    feeInfos &&
+      feeInfos.forEach((feeInfo) => {
+        if (feeInfo.currency === currency) {
+          fixedFee = toBTC(feeInfo.minerFee);
+        }
+      });
   } catch (err) {
     console.error(err);
   }

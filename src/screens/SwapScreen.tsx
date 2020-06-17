@@ -1,20 +1,34 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Button, Layout, Text } from "@ui-kitten/components";
-import React, { useState } from "react";
-import { Keyboard, StyleSheet, View } from "react-native";
+import { Button, Layout, Modal, Text } from "@ui-kitten/components";
+import React, { useEffect, useState } from "react";
+import { Keyboard, StyleSheet, View, Image } from "react-native";
 import {
-  TouchableWithoutFeedback,
   ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddressInput from "../components/swap/AddressInput";
 import FormGet from "../components/swap/FormGet";
 import FormInput from "../components/swap/FormInput";
+import ModalTransaction from "../components/swap/modals/ModalTransaction";
 import { Colors } from "../data/colors";
-import { MAXIMUM_SWAP_AMOUNT, MINIMUM_SWAP_AMOUNT } from "../data/constants";
+import {
+  MAXIMUM_SWAP_AMOUNT,
+  MINIMUM_SWAP_AMOUNT,
+  CoinSymbol,
+} from "../data/constants";
+import {
+  fetchFeesAsync,
+  fetchPriceAsync,
+  goNextStep,
+  fetchInfoAsync,
+  fetchDepositAddressAsync,
+} from "../state/swap/actions";
 import { addComma } from "../utils/addComma";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { WToast } from "react-native-smart-tip";
 
-const SwapScreen = (): JSX.Element => {
+const SwapScreen = ({ navigation }): JSX.Element => {
   const swap = useSelector((state) => state.swap);
   const {
     btcPrice,
@@ -26,7 +40,21 @@ const SwapScreen = (): JSX.Element => {
     sendingBalance,
     validationMessage,
     isValid,
+    error,
+    step,
   } = swap;
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchPriceAsync.request());
+    dispatch(fetchFeesAsync.request());
+    dispatch(fetchInfoAsync.request());
+    dispatch(fetchDepositAddressAsync.request());
+  }, []);
+
+  useEffect(() => {
+    WToast.show({ data: error });
+  }, [error]);
 
   const calcAmount = () => {
     if (receivingBalance === 0) {
@@ -42,6 +70,7 @@ const SwapScreen = (): JSX.Element => {
     string | undefined
   >("");
   const [isValidAddress, setIsValidAddress] = useState(false);
+  const [isModalWakeUp, setIsModalWakeUp] = useState(false);
 
   return (
     <Layout style={styles.screen}>
@@ -50,24 +79,31 @@ const SwapScreen = (): JSX.Element => {
           onPress={() => Keyboard.dismiss()}
           accessible={false}
         >
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("../../assets/skybridge-logo.png")}
+              style={styles.logo}
+            />
+          </View>
           <View style={styles.input}>
-            {/* <> */}
             <FormInput
               fromCurrency={fromCurrency}
               validationMessage={validationMessage}
+              step={step}
             />
             {validationMessage !== "" ? (
-              <Text category="p2" style={styles.errorMessage}>
+              <Text category="p2" style={styles.amountError}>
                 {validationMessage}
               </Text>
             ) : null}
             <MaterialCommunityIcons
               name="swap-vertical"
               size={40}
-              color="black"
+              color="white"
               style={styles.swap}
             />
             <FormGet
+              step={step}
               receivingBalance={receivingBalance}
               toCurrency={toCurrency}
               fees={fees}
@@ -76,12 +112,23 @@ const SwapScreen = (): JSX.Element => {
               {calcAmount()}
             </Text>
             <AddressInput
+              step={step}
               toCurrency={toCurrency}
               setIsValidAddress={setIsValidAddress}
               addressValidationMessage={addressValidationMessage}
               setAddressValidationMessage={setAddressValidationMessage}
               isValidAddress={isValidAddress}
             />
+            <View style={styles.addressAttention}>
+              <FontAwesome5
+                name="exclamation-triangle"
+                size={14}
+                color="orange"
+              />
+              <Text category="p2" style={styles.addressAttentionText}>
+                Do not use an Exchange Wallet address
+              </Text>
+            </View>
             {addressValidationMessage !== "" ? (
               <Text category="p2" style={styles.addressError}>
                 {addressValidationMessage}
@@ -89,16 +136,31 @@ const SwapScreen = (): JSX.Element => {
             ) : null}
           </View>
         </TouchableWithoutFeedback>
-        <View style={styles.butonView}>
+        <View style={styles.buttonView}>
           <Button
             style={styles.button}
             disabled={isValidAddress && isValid ? false : true}
-            onPress={() => console.log("hello")}
+            onPress={() => {
+              if (toCurrency === CoinSymbol.BTC_B) {
+                dispatch(goNextStep());
+              }
+              setIsModalWakeUp(true);
+            }}
           >
             SWAP
           </Button>
+
+          <Modal
+            visible={isModalWakeUp}
+            backdropStyle={styles.backdrop}
+            // onBackdropPress={() => setIsModalWakeUp(false)}
+          >
+            <ModalTransaction
+              navigation={navigation}
+              setIsModalWakeUp={setIsModalWakeUp}
+            />
+          </Modal>
         </View>
-        {/* </> */}
         <View style={styles.attention}>
           <Text category="p2" style={styles.attentionText}>
             Maximum swap (BTC to BTC.B) {addComma(MAXIMUM_SWAP_AMOUNT.BTC, 0)}
@@ -132,25 +194,25 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     // height: "100%",
   },
+  logoContainer: {
+    alignItems: "center",
+    marginTop: 30,
+  },
+  logo: {},
   input: {
-    height: 390,
+    height: 360,
     width: "100%",
     justifyContent: "flex-end",
     alignItems: "center",
     position: "relative",
-    // borderColor: "red",
-    // borderWidth: 10,
   },
   swap: {
     marginVertical: 15,
   },
   usd: {
-    alignSelf: "flex-end",
-    justifyContent: "flex-end",
     marginTop: 4,
-    marginRight: 40,
   },
-  butonView: {
+  buttonView: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "center",
@@ -162,23 +224,32 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkNavy,
   },
   attention: {
-    // position: "absolute",
-    // bottom: 10,
     paddingTop: 70,
     paddingHorizontal: 20,
   },
   attentionText: {
     marginTop: 4,
   },
-  errorMessage: {
+  addressAttention: {
+    flexDirection: "row",
+    marginTop: 6,
+    marginBottom: 34,
+  },
+  addressAttentionText: {
+    marginLeft: 4,
+  },
+  amountError: {
     position: "absolute",
-    top: 130,
+    top: 86,
     color: Colors.red,
   },
   addressError: {
     position: "absolute",
-    top: 352,
+    top: 360,
     color: Colors.red,
+  },
+  backdrop: {
+    backgroundColor: Colors.backdropTransparent,
   },
 });
 

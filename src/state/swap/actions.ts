@@ -12,37 +12,9 @@ import {
   IPlatformStatusResponse,
 } from "./types";
 
-export const GET_ALL_USER_INFO_REQUEST = "user/GET_ALL_USER_INFO_REQUEST";
-
-export const GET_ALL_USER_INFO_REQUEST_SUCCESS =
-  "user/GET_ALL_USER_INFO_REQUEST_SUCCESS";
-
-export const GET_ALL_USER_INFO_REQUEST_FAILURE =
-  "user/GET_ALL_USER_INFO_REQUEST_FAILURE";
-
-export const ADD_NUM = "ADD_NUM";
-
-export const GetAllUserInfoRequest = (id: number) => {
-  return { type: GET_ALL_USER_INFO_REQUEST, payload: id };
+export const goNextStep = () => {
+  return { type: SwapActionTypes.GO_NEXT_STEP };
 };
-
-export const AddNum = () => {
-  return { type: ADD_NUM };
-};
-
-export const setFromCurrency = createAction(
-  SwapActionTypes.SET_FROM_CURRENCY,
-  (action) => {
-    return (symbol: string) => action({ symbol });
-  }
-);
-
-export const setToCurrency = createAction(
-  SwapActionTypes.SET_TO_CURRENCY,
-  (action) => {
-    return (symbol: string) => action({ symbol });
-  }
-);
 
 export const inputSendingAmount = (amount: string) => {
   return { type: SwapActionTypes.INPUT_SENDING_BALANCE, payload: amount };
@@ -55,22 +27,21 @@ export const inputReceivingAmount = (amount: string) => {
   };
 };
 
-export const goNextStep = createAction(
-  SwapActionTypes.GO_NEXT_STEP,
-  (action) => {
-    return () => action();
-  }
-);
+export const setTxHash = (txHash: string) => {
+  return {
+    type: SwapActionTypes.SET_TX_HASH,
+    payload: txHash,
+  };
+};
 
+export const goBackStep = (step: number) => {
+  return {
+    type: SwapActionTypes.GO_BACK_STEP,
+    payload: step,
+  };
+};
 export const goToBTCBTransferStep = createAction(
   SwapActionTypes.GO_TO_BTCB_TRANSFER_STEP,
-  (action) => {
-    return () => action();
-  }
-);
-
-export const goBackStep = createAction(
-  SwapActionTypes.GO_BACK_STEP,
   (action) => {
     return () => action();
   }
@@ -91,6 +62,27 @@ export const validateInput = (result: boolean, message: string) => {
   };
 };
 
+// export const setFromCurrency = createAction(
+//   SwapActionTypes.SET_FROM_CURRENCY,
+//   (action) => {
+//     return (symbol: string) => action({ symbol });
+//   }
+// );
+
+export const setToCurrency = (coin: string) => {
+  return {
+    type: SwapActionTypes.SET_TO_CURRENCY,
+    payload: coin,
+  };
+};
+
+export const setFromCurrency = (coin: string) => {
+  return {
+    type: SwapActionTypes.SET_FROM_CURRENCY,
+    payload: coin,
+  };
+};
+
 export const toggleConfirmedAddress = createAction(
   SwapActionTypes.TOGGLE_CONFIRMED_ADDRESS,
   (action) => {
@@ -100,10 +92,6 @@ export const toggleConfirmedAddress = createAction(
 
 export const setRate = createAction(SwapActionTypes.SET_RATE, (action) => {
   return (rate: number) => action({ rate });
-});
-
-export const setTxHash = createAction(SwapActionTypes.SET_TX_HASH, (action) => {
-  return (txHash: string) => action({ txHash });
 });
 
 export const fetchPriceAsync = createAsyncAction(

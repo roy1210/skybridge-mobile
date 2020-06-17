@@ -6,11 +6,12 @@
     "react/jsx-uses-react": ["warn"],
     "react/jsx-uses-vars": ["warn"],
     "prettier/prettier": ["warn"],
+    "react-hooks/exhaustive-deps": ["off"],
+    "no-catch-shadow": ["off"],
     "@typescript-eslint/no-empty-interface": ["warn"],
     "@typescript-eslint/ban-ts-ignore": ["off"],
     "@typescript-eslint/no-non-null-assertion": ["off"],
     "eslint@typescript-eslint/no-explicit-any": ["off"],
-    "react-hooks/exhaustive-deps": ["off"],
     "@typescript-eslint/ban-ts-comment": ["off"]
   }
 }

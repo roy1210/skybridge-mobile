@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 const ExplorerScreen = () => {
   return (
-    <View>
+    <View style={styles.screen}>
       <Text style={styles.text}>Coming soon...</Text>
     </View>
   );
@@ -16,6 +16,9 @@ ExplorerScreen.navigationOptions = () => {
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   text: {},
 });
 

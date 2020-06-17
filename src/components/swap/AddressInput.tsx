@@ -13,6 +13,7 @@ interface Props {
   toCurrency: string;
   addressValidationMessage: string | undefined;
   isValidAddress: boolean;
+  step: number;
 }
 
 const AddressInput = (props: Props): JSX.Element => {
@@ -22,9 +23,14 @@ const AddressInput = (props: Props): JSX.Element => {
     addressValidationMessage,
     setAddressValidationMessage,
     isValidAddress,
+    step,
   } = props;
   const [value, setValue] = useState("");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    step !== 1 ? setValue("") : undefined;
+  }, [step]);
 
   const checkAddressHandler = (newValue): void => {
     if (value !== "") {
@@ -72,7 +78,7 @@ const AddressInput = (props: Props): JSX.Element => {
   return (
     <View>
       <Input
-        placeholder="Your address"
+        placeholder="Your receiving address"
         value={value}
         onChangeText={(nextValue) => {
           setValue(nextValue);
@@ -96,7 +102,7 @@ const AddressInput = (props: Props): JSX.Element => {
 const styles = StyleSheet.create({
   input: {
     width: 300,
-    marginVertical: 40,
+    marginTop: 40,
   },
   inputText: {
     marginRight: 24,

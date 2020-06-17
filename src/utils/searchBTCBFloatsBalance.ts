@@ -1,7 +1,7 @@
 import { addComma } from "./addComma";
 import {
   IFloatsBalance,
-  FloatBalanceArray
+  FloatBalanceArray,
 } from "../state/ducks/explorer/types";
 
 export const searchBTCBFloatsBalance = (

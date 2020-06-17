@@ -6,11 +6,12 @@ export const calculateTransferFee = (
 ): number => {
   let transferFee = 0;
   try {
-    feeInfos.forEach((feeInfo) => {
-      if (feeInfo.currency === currency) {
-        transferFee = Number(feeInfo.bridgeFeePercent);
-      }
-    });
+    feeInfos &&
+      feeInfos.forEach((feeInfo) => {
+        if (feeInfo.currency === currency) {
+          transferFee = Number(feeInfo.bridgeFeePercent);
+        }
+      });
   } catch (err) {
     console.error(err);
   }
