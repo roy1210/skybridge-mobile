@@ -10,6 +10,7 @@ import {
   GO_BACK_STEP,
   SET_FROM_CURRENCY,
   SET_TO_CURRENCY,
+  GO_TO_BTCB_TRANSFER_STEP,
 } from "./types";
 
 const initialState = {
@@ -45,6 +46,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         step: state.step + 1,
+      };
+    }
+    case GO_TO_BTCB_TRANSFER_STEP: {
+      return {
+        ...state,
+        step: 5,
       };
     }
     case GO_BACK_STEP: {

@@ -40,12 +40,11 @@ export const goBackStep = (step: number) => {
     payload: step,
   };
 };
-export const goToBTCBTransferStep = createAction(
-  SwapActionTypes.GO_TO_BTCB_TRANSFER_STEP,
-  (action) => {
-    return () => action();
-  }
-);
+export const goToBTCBTransferStep = () => {
+  return {
+    type: SwapActionTypes.GO_TO_BTCB_TRANSFER_STEP,
+  };
+};
 
 export const inputReceivingAddress = (address: string) => {
   return {

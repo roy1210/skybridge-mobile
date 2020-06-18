@@ -25,7 +25,6 @@ const FromCoinSelectModal = (props: Props) => {
           selectedValue={fromCurrency}
           onValueChange={(itemValue) => {
             dispatch(setFromCurrency(itemValue));
-            console.log("from");
           }}
         >
           <Picker.Item label={CoinSymbol.BTC} value={CoinSymbol.BTC} />

@@ -8,6 +8,7 @@ import { Screen } from "../../../data/screen";
 import ConfirmationModal from "./ConfirmationModal";
 import PaymentModal from "./PaymentModal";
 import RequestedTransactionModal from "./RequestedTransactionModal";
+import BTCBPaymentModal from "./BTCBPaymentModal";
 
 interface Props {
   setIsModalWakeUp: (arg0: boolean) => void;
@@ -29,6 +30,7 @@ const ModalTransaction = (props: Props) => {
     sendingBalance,
     error,
     txHash,
+    depositAddresses,
   } = swap;
 
   return (
@@ -60,6 +62,14 @@ const ModalTransaction = (props: Props) => {
             navigation={navigation}
             txHash={txHash}
             setIsModalWakeUp={setIsModalWakeUp}
+          />
+        )}
+        {step === 5 && (
+          <BTCBPaymentModal
+            setIsModalWakeUp={setIsModalWakeUp}
+            toWalletAddress={toWalletAddress}
+            fromCurrency={fromCurrency}
+            depositAddresses={depositAddresses}
           />
         )}
       </Card>

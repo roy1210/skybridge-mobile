@@ -23,6 +23,7 @@ import {
   goNextStep,
   fetchInfoAsync,
   fetchDepositAddressAsync,
+  goToBTCBTransferStep,
 } from "../state/swap/actions";
 import { addComma } from "../utils/addComma";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -139,10 +140,16 @@ const SwapScreen = ({ navigation }): JSX.Element => {
         <View style={styles.buttonView}>
           <Button
             style={styles.button}
-            disabled={isValidAddress && isValid ? false : true}
-            onPress={() => {
+            disabled={
+              isValidAddress && isValid && fromCurrency !== toCurrency
+                ? false
+                : true
+            }
+            onPress={(): void => {
               if (toCurrency === CoinSymbol.BTC_B) {
                 dispatch(goNextStep());
+              } else if (toCurrency === CoinSymbol.BTC) {
+                dispatch(goToBTCBTransferStep());
               }
               setIsModalWakeUp(true);
             }}
@@ -150,11 +157,7 @@ const SwapScreen = ({ navigation }): JSX.Element => {
             SWAP
           </Button>
 
-          <Modal
-            visible={isModalWakeUp}
-            backdropStyle={styles.backdrop}
-            // onBackdropPress={() => setIsModalWakeUp(false)}
-          >
+          <Modal visible={isModalWakeUp} backdropStyle={styles.backdrop}>
             <ModalTransaction
               navigation={navigation}
               setIsModalWakeUp={setIsModalWakeUp}
