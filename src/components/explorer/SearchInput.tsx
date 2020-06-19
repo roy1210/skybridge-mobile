@@ -1,8 +1,7 @@
-import { Button, Input, Icon } from "@ui-kitten/components";
+import { Button, Icon, Input } from "@ui-kitten/components";
 import React, { useState } from "react";
-import { StyleSheet, View, Keyboard } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Colors } from "../../data/colors";
-import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 
 const SearchInput = (): JSX.Element => {
   const [value, setValue] = useState("");
@@ -11,10 +10,6 @@ const SearchInput = (): JSX.Element => {
   const SearchIcon = (props) => <Icon {...props} name="search-outline" />;
 
   return (
-    // <TouchableWithoutFeedback
-    //   onPress={() => Keyboard.dismiss()}
-    //   style={styles.disablePress}
-    // >
     <View style={styles.wrapper}>
       <Input
         placeholder="Search for Transaction tx or Address"
@@ -30,9 +25,7 @@ const SearchInput = (): JSX.Element => {
       />
       <View style={styles.buttons}>
         <Button style={styles.button}>Search</Button>
-        <Button style={styles.button} status="danger">
-          Clear
-        </Button>
+        <Button style={styles.button}>Clear</Button>
       </View>
     </View>
   );

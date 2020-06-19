@@ -1,15 +1,14 @@
-import { Layout, Text, Card } from "@ui-kitten/components";
+import { Ionicons } from "@expo/vector-icons";
+import { Layout, Text } from "@ui-kitten/components";
 import React from "react";
-import { Keyboard, StyleSheet, View, Image, FlatList } from "react-native";
+import { FlatList, Image, Keyboard, StyleSheet, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import SearchInput from "../components/explorer/SearchInput";
 import { Colors } from "../data/colors";
-import { Ionicons } from "@expo/vector-icons";
 import { DummyData } from "../data/dummyTransactionData";
 import { coinId } from "../utils/coinId";
 import { renderDateYearTime } from "../utils/renderDateYearTime";
 import { statusText } from "../utils/status";
-import { TxStatus } from "../state/explorer/types";
 
 const ExplorerScreen = () => {
   const data = DummyData;

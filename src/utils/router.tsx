@@ -9,6 +9,9 @@ import { Colors } from "../data/colors";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 
+// Memo: This is for React navigation v4
+// Memo: Remove v4 dependency if v5 working well
+
 const defaultStackNavOptions = {
   headerStyle: {
     backgroundColor: Colors.headerBlack,
