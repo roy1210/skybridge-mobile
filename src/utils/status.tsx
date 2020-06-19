@@ -4,76 +4,76 @@ import { Text } from "@ui-kitten/components";
 import React from "react";
 import { Colors } from "../data/colors";
 
-export const statusText = (status: string): JSX.Element => {
+export const statusText = (status: string, size: string): JSX.Element => {
   switch (status) {
     case TxStatus.COMPLETED:
       return (
-        <Text category="p2" style={styles.completed}>
+        <Text category={size} style={styles.completed}>
           {status}
         </Text>
       );
     case TxStatus.CANCELED:
       return (
-        <Text category="p2" style={styles.canceled}>
+        <Text category={size} style={styles.canceled}>
           {status}
         </Text>
       );
     case TxStatus.BROADCASTED:
       return (
-        <Text category="p2" style={styles.broadcasted}>
+        <Text category={size} style={styles.broadcasted}>
           {status}
         </Text>
       );
     case TxStatus.SENDING:
       return (
-        <Text category="p2" style={styles.sending}>
+        <Text category={size} style={styles.sending}>
           {status}
         </Text>
       );
     case TxStatus.SENT:
       return (
-        <Text category="p2" style={styles.sent}>
+        <Text category={size} style={styles.sent}>
           {status}
         </Text>
       );
     case TxStatus.PENDING:
       return (
-        <Text category="p2" style={styles.pending}>
+        <Text category={size} style={styles.pending}>
           {status}
         </Text>
       );
     case TxStatus.SIGNING:
       return (
-        <Text category="p2" style={styles.signing}>
+        <Text category={size} style={styles.signing}>
           {status}
         </Text>
       );
     case TxStatus.REFUNDING:
       return (
-        <Text category="p2" style={styles.refunding}>
+        <Text category={size} style={styles.refunding}>
           {status}
         </Text>
       );
     case TxStatus.SIGNING_REFUND:
       return (
-        <Text category="p2" style={styles.refund}>
+        <Text category={size} style={styles.refund}>
           {status}
         </Text>
       );
     case TxStatus.REFUNDED:
       return (
-        <Text category="p2" style={styles.refunded}>
+        <Text category={size} style={styles.refunded}>
           {status}
         </Text>
       );
     case TxStatus.SENDING_REFUND:
       return (
-        <Text category="p2" style={styles.sendingRefund}>
+        <Text category={size} style={styles.sendingRefund}>
           {status}
         </Text>
       );
     default:
-      return <Text category="p2">{status}</Text>;
+      return <Text category={size}>{status}</Text>;
   }
 };
 

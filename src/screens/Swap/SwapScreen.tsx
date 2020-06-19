@@ -7,16 +7,16 @@ import {
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
-import AddressInput from "../components/swap/AddressInput";
-import FormGet from "../components/swap/FormGet";
-import FormInput from "../components/swap/FormInput";
-import ModalTransaction from "../components/swap/modals/ModalTransaction";
-import { Colors } from "../data/colors";
+import AddressInput from "../../components/swap/AddressInput";
+import FormGet from "../../components/swap/FormGet";
+import FormInput from "../../components/swap/FormInput";
+import ModalTransaction from "../../components/swap/modals/ModalTransaction";
+import { Colors } from "../../data/colors";
 import {
   MAXIMUM_SWAP_AMOUNT,
   MINIMUM_SWAP_AMOUNT,
   CoinSymbol,
-} from "../data/constants";
+} from "../../data/constants";
 import {
   fetchFeesAsync,
   fetchPriceAsync,
@@ -24,8 +24,8 @@ import {
   fetchInfoAsync,
   fetchDepositAddressAsync,
   goToBTCBTransferStep,
-} from "../state/swap/actions";
-import { addComma } from "../utils/addComma";
+} from "../../state/swap/actions";
+import { addComma } from "../../utils/addComma";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { WToast } from "react-native-smart-tip";
 
@@ -82,7 +82,7 @@ const SwapScreen = ({ navigation }): JSX.Element => {
         >
           <View style={styles.logoContainer}>
             <Image
-              source={require("../../assets/skybridge-logo.png")}
+              source={require("../../../assets/skybridge-logo.png")}
               style={styles.logo}
             />
           </View>

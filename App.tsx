@@ -6,34 +6,27 @@ import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import React from "react";
 import { enableScreens } from "react-native-screens";
 import { Provider } from "react-redux";
-import { App } from "./src";
 import { default as theme } from "./src/data/theme.json";
+import Navigator from "./src/Navigator";
 import configureStore from "./store";
-import SearchInput from "./src/components/explorer/SearchInput";
-const Root = () => {
+
+const App = () => {
   enableScreens();
 
   const initialState = (window as any).initialReduxState;
   const store = configureStore(initialState);
-  // Appearance.getColorScheme();
-  // const colorScheme = useColorScheme();
 
   return (
     <Provider store={store}>
-      {/* <SearchInput /> */}
-      {/* <App /> */}
-      {/* </PaperProvider> */}
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
-        <App />
-        {/* <SearchInput /> */}
-        {/* <SwapScreen */}
+        <Navigator />
       </ApplicationProvider>
     </Provider>
   );
 };
 
-export default Root;
+export default App;
 // const fetchFonts = () => {
 //   return Font.loadAsync({
 //     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
@@ -41,7 +34,8 @@ export default Root;
 //   });
 // };
 // const [fontLoaded, setFontLoaded] = useState(false);
-
+// Appearance.getColorScheme();
+// const colorScheme = useColorScheme();
 // if (!fontLoaded) {
 //   return (
 //     <AppLoading

@@ -77,7 +77,7 @@ const RequestedTransactionModal = (props: Props) => {
               onPress={() => {
                 setIsModalWakeUp(false);
                 dispatch(goBackStep(1));
-                navigation.navigate("Explorer");
+                navigation.navigate("EXPLORER");
               }}
             >
               View Explorer
