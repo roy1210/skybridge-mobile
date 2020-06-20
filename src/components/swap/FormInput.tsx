@@ -1,7 +1,9 @@
+import { Entypo } from "@expo/vector-icons";
 import { Input, Text } from "@ui-kitten/components";
-import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Platform, StyleSheet, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import RBSheet from "react-native-raw-bottom-sheet";
 import { WToast } from "react-native-smart-tip";
 import { useDispatch } from "react-redux";
 import { Colors } from "../../data/colors";
@@ -16,11 +18,11 @@ interface Props {
 const FormInput = (props: Props): JSX.Element => {
   const { validationMessage, fromCurrency, step } = props;
   const [value, setValue] = useState("");
-  const [isCoinModalWakeUp, setIsCoinModalWakeUp] = useState(false);
   const dispatch = useDispatch();
   const show = () => {
     WToast.show({ data: validationMessage });
   };
+  const refSelectCoinSheet = useRef();
 
   useEffect(() => {
     step !== 1 ? setValue("") : undefined;
@@ -50,18 +52,36 @@ const FormInput = (props: Props): JSX.Element => {
       <View style={styles.currency}>
         <TouchableWithoutFeedback
           onPress={() => {
-            setIsCoinModalWakeUp(true);
+            // setIsCoinModalWakeUp(true);
+            refSelectCoinSheet.current.open();
           }}
         >
-          <Text>{fromCurrency}</Text>
+          <View style={styles.currencyView}>
+            <Entypo
+              style={styles.triangle}
+              name="triangle-down"
+              size={14}
+              color="white"
+            />
+            <Text style={styles.currencyText}>{fromCurrency}</Text>
+          </View>
         </TouchableWithoutFeedback>
       </View>
-      <Modal visible={isCoinModalWakeUp} transparent={true}>
-        <FromCoinSelectModal
-          fromCurrency={fromCurrency}
-          setIsCoinModalWakeUp={setIsCoinModalWakeUp}
-        />
-      </Modal>
+      <RBSheet
+        ref={refSelectCoinSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: Colors.transparent,
+          },
+          draggableIcon: {
+            backgroundColor: Colors.grey,
+          },
+        }}
+      >
+        <FromCoinSelectModal fromCurrency={fromCurrency} />
+      </RBSheet>
     </View>
   );
 };
@@ -74,12 +94,28 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   currency: {
-    position: "absolute",
     right: 20,
     top: 10,
     height: 100,
     color: "white",
+    position: "absolute",
   },
+  currencyView: {
+    width: 60,
+    height: 30,
+    flexDirection: "row",
+  },
+  triangle: {
+    top: 2,
+    marginRight: 3,
+    ...Platform.select({
+      android: {
+        top: 4,
+        marginRight: 6,
+      },
+    }),
+  },
+  currencyText: {},
 });
 
 export default FormInput;

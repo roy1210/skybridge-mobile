@@ -1,8 +1,10 @@
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Divider, Layout, Text } from "@ui-kitten/components";
-import React from "react";
+import React, { useRef } from "react";
 import { Image, ScrollView, StyleSheet, View } from "react-native";
+import RBSheet from "react-native-raw-bottom-sheet";
 import { useSelector } from "react-redux";
+import TxBottomSheet from "../../components/explorer/TxBottomSheet";
 import { Colors } from "../../data/colors";
 import { CoinSymbol } from "../../data/constants";
 import { Reward } from "../../types/swapApp";
@@ -10,12 +12,16 @@ import { calculateFixedFee } from "../../utils/calculateFixedFee";
 import { coinId } from "../../utils/coinId";
 import { renderDateYearTime } from "../../utils/renderDateYearTime";
 import { statusText } from "../../utils/status";
+import RewardsBottomSheet from "../../components/explorer/RewardsBottomSheet";
 
 const TransactionDetailScreen = ({ route }) => {
   const { tx, itemId } = route.params;
   const swap = useSelector((state) => state.swap);
   const { info, fees } = swap;
   const transactionFeePercent = info && info.swapInfo.feePercent;
+  const refTxInSheet = useRef();
+  const refTxOutSheet = useRef();
+  const refRewardsPayoutSheet = useRef();
 
   const coinName = (coin: string) => {
     switch (coin) {
@@ -64,13 +70,34 @@ const TransactionDetailScreen = ({ route }) => {
           <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>Inbound Transaction Hash</Text>
-            <Text style={styles.descriptionText}>{tx.txIdIn}</Text>
+            <View style={styles.txHashView}>
+              <Text style={styles.txHashText}>{tx.txIdIn}</Text>
+              <Entypo
+                name="dots-three-vertical"
+                size={24}
+                color="white"
+                style={styles.dot}
+                onPress={() => {
+                  refTxInSheet.current.open();
+                }}
+              />
+            </View>
           </View>
           <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>Outbound Transaction Hash</Text>
-            <Text style={styles.descriptionText}>{tx.txIdOut}</Text>
+            <View style={styles.txHashView}>
+              <Text style={styles.txHashText}>{tx.txIdOut}</Text>
+              <Entypo
+                name="dots-three-vertical"
+                size={24}
+                color="white"
+                style={styles.dot}
+                onPress={() => refTxOutSheet.current.open()}
+              />
+            </View>
           </View>
+
           <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>From</Text>
@@ -131,14 +158,36 @@ const TransactionDetailScreen = ({ route }) => {
                       color="white"
                       style={styles.arrow}
                     />
-
-                    {/* href={transactionDetailByAddress(
-                      feeCurrency,
-                      reward.address
-                    )} */}
-                    <Text style={styles.rewardAddressText}>
-                      {reward.address}
-                    </Text>
+                    <View style={styles.txHashView}>
+                      <Text style={styles.rewardAddressText}>
+                        {reward.address}
+                      </Text>
+                      <Entypo
+                        name="dots-three-vertical"
+                        size={24}
+                        color="white"
+                        style={styles.rewardsDot}
+                        onPress={() => refRewardsPayoutSheet.current.open()}
+                      />
+                    </View>
+                    <RBSheet
+                      ref={refRewardsPayoutSheet}
+                      closeOnDragDown={true}
+                      closeOnPressMask={true}
+                      customStyles={{
+                        wrapper: {
+                          backgroundColor: Colors.transparent,
+                        },
+                        draggableIcon: {
+                          backgroundColor: Colors.grey,
+                        },
+                      }}
+                    >
+                      <RewardsBottomSheet
+                        currency={tx.feeCurrency}
+                        address={reward.address}
+                      />
+                    </RBSheet>
                   </View>
                 );
               })}
@@ -146,6 +195,46 @@ const TransactionDetailScreen = ({ route }) => {
           </View>
         </View>
       </ScrollView>
+      <RBSheet
+        ref={refTxInSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: Colors.backdropTransparent,
+          },
+          draggableIcon: {
+            backgroundColor: Colors.grey,
+          },
+        }}
+      >
+        <TxBottomSheet
+          txHash={tx.txIdIn}
+          currency={tx.currencyIn}
+          txId={tx.txIdIn}
+          status={tx.status}
+        />
+      </RBSheet>
+      <RBSheet
+        ref={refTxOutSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: Colors.transparent,
+          },
+          draggableIcon: {
+            backgroundColor: Colors.grey,
+          },
+        }}
+      >
+        <TxBottomSheet
+          txHash={tx.txIdOut}
+          currency={tx.currencyOut}
+          txId={tx.txIdOut}
+          status={tx.status}
+        />
+      </RBSheet>
     </Layout>
   );
 };
@@ -153,7 +242,8 @@ const TransactionDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
   screen: {
     height: "100%",
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
   },
   table: {
     flexDirection: "column",
@@ -172,6 +262,20 @@ const styles = StyleSheet.create({
     width: "60%",
     paddingLeft: 10,
   },
+  txHashView: {
+    width: "100%",
+    flexDirection: "row",
+  },
+  txHashText: {
+    width: "56%",
+    paddingLeft: 10,
+  },
+  dot: {
+    width: "9%",
+  },
+  rewardsDot: {
+    width: "8%",
+  },
   addressText: {
     width: "56%",
   },
@@ -183,7 +287,7 @@ const styles = StyleSheet.create({
   },
   rewardsView: {
     marginLeft: 10,
-    width: "60%",
+    width: "64%",
     paddingHorizontal: 18,
     paddingBottom: 18,
   },
@@ -209,7 +313,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   rewardAddressText: {
-    width: "100%",
+    width: "88%",
   },
 });
 

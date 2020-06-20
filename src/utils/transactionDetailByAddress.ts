@@ -1,16 +1,11 @@
-import { CoinSymbol } from "./../state/ducks/explorer/types";
-import { isProduction } from "./isProduction";
+import { CoinSymbol } from "../data/constants";
 
 export const transactionDetailByAddress = (
   currency: string,
   address: string
 ): string => {
-  const btcExplorerBaseUrl = isProduction()
-    ? "https://blockstream.info/address"
-    : "https://blockstream.info/testnet/address";
-  const bnbExplorerBaseUrl = isProduction()
-    ? "https://explorer.binance.org/address"
-    : "https://testnet-explorer.binance.org/address";
+  const btcExplorerBaseUrl = "https://blockstream.info/testnet/address";
+  const bnbExplorerBaseUrl = "https://testnet-explorer.binance.org/address";
 
   switch (currency) {
     case CoinSymbol.BTC:

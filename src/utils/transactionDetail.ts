@@ -1,5 +1,5 @@
-import { CoinSymbol, TxStatus } from "./../state/ducks/explorer/types";
-import { isProduction } from "./isProduction";
+import { CoinSymbol } from "./../data/constants";
+import { TxStatus } from "../state/explorer/types";
 
 const isRefundStatus = (status: string): boolean => {
   if (status === TxStatus.REFUNDED) {
@@ -17,18 +17,14 @@ export const transactionDetail = (
   hash: string,
   status: string
 ): string => {
-  const btcExplorerBaseUrl = isProduction()
-    ? "https://blockstream.info/tx"
-    : "https://blockstream.info/testnet/tx";
-  const bnbExplorerBaseUrl = isProduction()
-    ? "https://explorer.binance.org/tx"
-    : "https://testnet-explorer.binance.org/tx";
+  const btcExplorerBaseUrl = "https://blockstream.info/testnet/tx";
+  const bnbExplorerBaseUrl = "https://testnet-explorer.binance.org/tx";
 
   // Not refund status
   const bnbCurrencies = [
     CoinSymbol.BTC_B,
     CoinSymbol.BTC_B_918,
-    CoinSymbol.BTC_B_888
+    CoinSymbol.BTC_B_888,
   ];
   if (!isRefundStatus(status)) {
     if (currency === CoinSymbol.BTC) {

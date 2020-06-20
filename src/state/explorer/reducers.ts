@@ -8,6 +8,7 @@ import {
   GO_TO_BACK_PAGE,
   SET_QUERY,
   CHECK_TRANSACTION_LENGTH,
+  TOGGLE_ACTION_SHEET,
 } from "./types";
 
 export const initialState: IExplorerState = {

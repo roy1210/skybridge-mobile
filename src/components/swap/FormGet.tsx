@@ -1,12 +1,14 @@
 import { Input, Text } from "@ui-kitten/components";
-import React, { useState } from "react";
-import { StyleSheet, View, Modal } from "react-native";
+import React, { useState, useRef } from "react";
+import { StyleSheet, View, Modal, Platform } from "react-native";
 import { MINIMUM_SWAP_AMOUNT } from "../../data/constants";
 import { IFetchFees } from "../../state/swap/types";
 import { calculateReceivingAmount } from "../../utils/calculateReceivingAmount";
 import { Colors } from "../../data/colors";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import ToCoinSelectModal from "./modals/ToCoinSelectModal";
+import { Entypo } from "@expo/vector-icons";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 interface Props {
   toCurrency: string;
@@ -17,7 +19,6 @@ interface Props {
 
 const FormGet = (props: Props): JSX.Element => {
   const { toCurrency, receivingBalance, fees, step } = props;
-  const [isCoinModalWakeUp, setIsCoinModalWakeUp] = useState(false);
   const estimatedReceivingAmount =
     receivingBalance < MINIMUM_SWAP_AMOUNT
       ? 0
@@ -25,6 +26,8 @@ const FormGet = (props: Props): JSX.Element => {
   const formValue = isNaN(estimatedReceivingAmount)
     ? "Please input number"
     : estimatedReceivingAmount;
+
+  const refSelectCoinSheet = useRef();
 
   return (
     <View style={styles.input}>
@@ -38,18 +41,42 @@ const FormGet = (props: Props): JSX.Element => {
       <View style={styles.currency}>
         <TouchableWithoutFeedback
           onPress={() => {
-            setIsCoinModalWakeUp(true);
+            // setIsCoinModalWakeUp(true);
+            refSelectCoinSheet.current.open();
           }}
         >
-          <Text>{toCurrency}</Text>
+          <View style={styles.currencyView}>
+            <Entypo
+              style={styles.triangle}
+              name="triangle-down"
+              size={14}
+              color="white"
+            />
+            <Text style={styles.currencyText}>{toCurrency}</Text>
+          </View>
         </TouchableWithoutFeedback>
       </View>
-      <Modal visible={isCoinModalWakeUp} transparent={true}>
+      {/* <Modal visible={isCoinModalWakeUp} transparent={true}>
         <ToCoinSelectModal
           toCurrency={toCurrency}
           setIsCoinModalWakeUp={setIsCoinModalWakeUp}
         />
-      </Modal>
+      </Modal> */}
+      <RBSheet
+        ref={refSelectCoinSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: Colors.transparent,
+          },
+          draggableIcon: {
+            backgroundColor: Colors.grey,
+          },
+        }}
+      >
+        <ToCoinSelectModal toCurrency={toCurrency} />
+      </RBSheet>
     </View>
   );
 };
@@ -61,10 +88,28 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   currency: {
-    position: "absolute",
     right: 20,
     top: 10,
+    height: 100,
+    color: "white",
+    position: "absolute",
   },
+  currencyView: {
+    width: 60,
+    height: 30,
+    flexDirection: "row",
+  },
+  triangle: {
+    top: 2,
+    marginRight: 3,
+    ...Platform.select({
+      android: {
+        top: 4,
+        marginRight: 6,
+      },
+    }),
+  },
+  currencyText: {},
 });
 
 export default FormGet;
