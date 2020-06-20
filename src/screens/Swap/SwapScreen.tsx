@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button, Layout, Modal, Text } from "@ui-kitten/components";
 import React, { useEffect, useState } from "react";
-import { Keyboard, StyleSheet, View, Image } from "react-native";
+import { Keyboard, StyleSheet, View, Image, Platform } from "react-native";
 import {
   ScrollView,
   TouchableWithoutFeedback,
@@ -28,6 +28,11 @@ import {
 import { addComma } from "../../utils/addComma";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { WToast } from "react-native-smart-tip";
+import {
+  fetchSwapHistoryAsync,
+  fetchSwapHistoryAsync_Request,
+  fetchFloatsAsync,
+} from "../../state/explorer/actions";
 
 const SwapScreen = ({ navigation }): JSX.Element => {
   const swap = useSelector((state) => state.swap);
@@ -51,6 +56,8 @@ const SwapScreen = ({ navigation }): JSX.Element => {
     dispatch(fetchFeesAsync.request());
     dispatch(fetchInfoAsync.request());
     dispatch(fetchDepositAddressAsync.request());
+    dispatch(fetchSwapHistoryAsync.request({ query: "", page: 0 }));
+    dispatch(fetchFloatsAsync.request());
   }, []);
 
   useEffect(() => {
@@ -229,6 +236,11 @@ const styles = StyleSheet.create({
   attention: {
     paddingTop: 70,
     paddingHorizontal: 20,
+    ...Platform.select({
+      android: {
+        paddingBottom: 10,
+      },
+    }),
   },
   attentionText: {
     marginTop: 4,

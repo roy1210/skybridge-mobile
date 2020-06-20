@@ -301,16 +301,8 @@ function* handleFetchDepositAddress(
 export default function* swapSaga() {
   yield all([
     takeLatest(SwapActionTypes.INPUT_SENDING_BALANCE, checkSendingBalance),
-    // takeLatest(
-    //   SwapActionTypes.INPUT_RECEIVING_ADDRESS,
-    //   handleToWalletAddressInput
-    // ),
-    // takeLatest(SwapActionTypes.GO_NEXT_STEP, handleNextActionButton),
-    // takeLatest(SwapActionTypes.SET_RATE, recalculateAmount),
-    // takeLatest(SwapActionTypes.SET_TX_HASH, handleSetTxHash),
     takeLatest(SwapActionTypes.FETCH_PRICE_REQUEST, handleFetchPrice),
     takeLatest(SwapActionTypes.CREATE_SWAP_REQUEST, handleCreateSwap),
-    // takeLatest(SwapActionTypes.FETCH_TX_HASH_REQUEST, handleFetchTxHash),
     takeLatest(SwapActionTypes.FETCH_INFO_REQUEST, handleFetchInfo),
     takeLatest(SwapActionTypes.FETCH_INDEXER_REQUEST, handleFetchIndexer),
     takeLatest(
@@ -318,6 +310,12 @@ export default function* swapSaga() {
       handleFetchDepositAddress
     ),
     takeLatest(SwapActionTypes.FETCH_FEES_REQUEST, handleFetchFees),
+    // takeLatest(
+    //   SwapActionTypes.INPUT_RECEIVING_ADDRESS,
+    //   handleToWalletAddressInput
+    // ),
+    // takeLatest(SwapActionTypes.GO_NEXT_STEP, handleNextActionButton),
+    // takeLatest(SwapActionTypes.SET_RATE, recalculateAmount),
     // takeLatest(
     //   SwapActionTypes.FETCH_PLATFORM_STATUS_REQUEST,
     //   handlePlatformStatus

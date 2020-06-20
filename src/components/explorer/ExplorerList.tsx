@@ -1,22 +1,20 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { Text } from "@ui-kitten/components";
+import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 import React from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Image, Platform, StyleSheet, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { Colors } from "../../data/colors";
+import { SwapRawObject } from "../../types/swapApp";
 import { coinId } from "../../utils/coinId";
 import { renderDateYearTime } from "../../utils/renderDateYearTime";
 import { statusText } from "../../utils/status";
-import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
-import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface Props {
-  data: any;
+  transactions: SwapRawObject[];
+  isNoResults: boolean;
 }
 
 const ExplorerList = (props: Props) => {
@@ -37,92 +35,68 @@ const ExplorerList = (props: Props) => {
         <Text category="p2" style={styles.toDescription}>
           TO
         </Text>
-        <View style={{ width: 10 }} />
+        <View style={styles.push} />
       </View>
-      <ScrollView>
-        {props.data.items.map((item) => (
-          <TouchableWithoutFeedback
-            key={item.timestamp}
-            onPress={() =>
-              navigation.navigate("TRANSACTION", {
-                itemId: item.timestamp,
-                tx: item,
-              })
-            }
-          >
-            <View key={item.timestamp} style={styles.record}>
-              <Text category="p2" style={styles.date}>
-                {renderDateYearTime(item.timestamp)}
-              </Text>
-              <Text category="p2" style={styles.status}>
-                {statusText(item.status, "p2")}
-              </Text>
-              <View style={styles.amount}>
-                <Image source={coinId(item.currencyIn)} style={styles.coin} />
-                <Text category="p2" style={styles.amountText}>
-                  {item.amountIn}
+      {props.isNoResults ? (
+        <View style={styles.noResultsViews}>
+          <MaterialCommunityIcons name="cloud-search" size={80} color="white" />
+          <Text category="h6">No results fond :-(</Text>
+          <Text category="h6">Try a different transaction or address</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={props.transactions}
+          keyExtractor={() => String(Math.random() * 100)}
+          renderItem={({ item }) => (
+            <TouchableWithoutFeedback
+              key={String(item.timestamp)}
+              onPress={() =>
+                navigation.navigate("TRANSACTION", {
+                  itemId: String(item.timestamp),
+                  tx: item,
+                })
+              }
+            >
+              <View key={item.timestamp} style={styles.record}>
+                <Text category="p2" style={styles.date}>
+                  {renderDateYearTime(item.timestamp)}
                 </Text>
-              </View>
-              <Ionicons
-                name="ios-arrow-round-forward"
-                size={24}
-                color="white"
-                style={styles.link}
-              />
-              <View style={styles.amount}>
-                <Image source={coinId(item.currencyOut)} style={styles.coin} />
-                <Text category="p2" style={styles.amountText}>
-                  {item.amountOut}
+                <Text category="p2" style={styles.status}>
+                  {statusText(item.status, "p2")}
                 </Text>
+                <View style={styles.amount}>
+                  <Image source={coinId(item.currencyIn)} style={styles.coin} />
+
+                  <Text category="p2" style={styles.amountText}>
+                    {item.amountIn}
+                  </Text>
+                </View>
+                <Ionicons
+                  name="ios-arrow-round-forward"
+                  size={24}
+                  color="white"
+                  style={styles.link}
+                />
+                <View style={styles.amount}>
+                  <Image
+                    source={coinId(item.currencyOut)}
+                    style={styles.coin}
+                  />
+                  <Text category="p2" style={styles.amountText}>
+                    {item.amountOut}
+                  </Text>
+                </View>
+                <Ionicons
+                  name="ios-arrow-forward"
+                  size={18}
+                  color="white"
+                  style={styles.link}
+                />
               </View>
-              <Ionicons
-                name="ios-arrow-forward"
-                size={18}
-                color="white"
-                style={styles.link}
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        ))}
-      </ScrollView>
-      {/* <FlatList
-        data={props.data.items}
-        keyExtractor={(item) => String(item.timestamp)}
-        renderItem={({ item }) => ( */}
-      {/* <View style={styles.record}>
-            <Text category="p2" style={styles.date}>
-              {renderDateYearTime(item.timestamp)}
-            </Text>
-            <Text category="p2" style={styles.status}>
-              {statusText(item.status)}
-            </Text>
-            <View style={styles.amount}>
-              <Image source={coinId(item.currencyIn)} style={styles.coin} />
-              <Text category="p2" style={styles.amountText}>
-                {item.amountIn}
-              </Text>
-            </View>
-            <Ionicons
-              name="ios-arrow-round-forward"
-              size={24}
-              color="white"
-              style={styles.link}
-            />
-            <View style={styles.amount}>
-              <Image source={coinId(item.currencyOut)} style={styles.coin} />
-              <Text category="p2" style={styles.amountText}>
-                {item.amountOut}
-              </Text>
-            </View>
-            <Ionicons
-              name="ios-arrow-forward"
-              size={18}
-              color="white"
-              style={styles.link}
-            />
-          </View> */}
-      {/* )} */}
-      {/* /> */}
+            </TouchableWithoutFeedback>
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -130,12 +104,17 @@ const ExplorerList = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     width: "96%",
-    marginTop: 14,
+    marginTop: 4,
     alignSelf: "center",
     backgroundColor: Colors.black,
     borderRadius: 10,
-    paddingBottom: 2,
     height: 410,
+    paddingBottom: 2,
+    ...Platform.select({
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
   title: {
     flexDirection: "row",
@@ -144,19 +123,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   description: {
-    color: Colors.gold,
+    color: Colors.mayaBlue,
   },
   dataDescription: {
     marginLeft: 10,
-    color: Colors.gold,
+    color: Colors.mayaBlue,
   },
   statusDescription: {
     marginRight: 8,
-    color: Colors.gold,
+    color: Colors.mayaBlue,
   },
   toDescription: {
     paddingRight: 5,
-    color: Colors.gold,
+    color: Colors.mayaBlue,
   },
   record: {
     flexDirection: "row",
@@ -165,6 +144,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingVertical: 14,
     paddingHorizontal: 6,
+  },
+  push: {
+    width: 10,
   },
   date: {
     width: 60,
@@ -194,6 +176,13 @@ const styles = StyleSheet.create({
   link: {
     alignSelf: "center",
     alignContent: "center",
+  },
+  noResultsViews: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 100,
   },
 });
 

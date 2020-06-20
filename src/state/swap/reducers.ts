@@ -148,7 +148,7 @@ const reducer = (state = initialState, action) => {
       return { ...state, info: action.payload };
     }
     case getType(actions.fetchInfoAsync.failure): {
-      return { ...state, error: action.payload.message.message, info: null };
+      return { ...state, error: action.payload.message, info: null };
     }
 
     case getType(actions.fetchIndexerAsync.success): {

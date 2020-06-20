@@ -42,6 +42,7 @@ export const Colors = {
   softPurple: "#9795C5",
   borderPurple: "rgba(255, 255, 255, 0.25)",
   white: "#ffffff",
+  disabledWhite: "rgba(255,255,255,0.3)",
   black: "#000000",
   lightGrey: "rgba(255, 255, 255, 0.1)",
   darkGrey: "rgba(255, 255, 255, 0.1)",

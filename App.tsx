@@ -9,12 +9,15 @@ import { Provider } from "react-redux";
 import { default as theme } from "./src/data/theme.json";
 import Navigator from "./src/Navigator";
 import configureStore from "./store";
+import { rootSaga } from "./src/state/configureStore";
 
 const App = () => {
   enableScreens();
 
   const initialState = (window as any).initialReduxState;
   const store = configureStore(initialState);
+  // @ts-ignore
+  store.runSaga(rootSaga);
 
   return (
     <Provider store={store}>

@@ -1,88 +1,88 @@
-// import {
-//   IFetchFees,
-//   IFetchInfoResponse,
-//   IPlatformStatusResponse
-// } from "./../swap/types";
-// import { SwapRawObject } from "../../../types/swapApp";
+import {
+  IFetchFees,
+  IFetchInfoResponse,
+  IPlatformStatusResponse,
+} from "./../swap/types";
+import { SwapRawObject } from "../../types/swapApp";
 
-// export interface IExplorerState {
-//   readonly page: number;
-//   readonly selectedPage: number;
-//   readonly query: string;
-//   readonly total: number;
-//   readonly swapHistory: ITransactions | null;
-//   readonly isLoading: boolean;
-//   readonly isHideWaiting: boolean;
-//   readonly isNoResults: boolean;
-//   readonly error: Error | null;
-//   readonly fees: IFetchFees;
-//   readonly info: IFetchInfoResponse | null;
-//   readonly floats: IFetchFloatsResponse;
-//   readonly platformStatus: IPlatformStatusResponse | null;
-// }
+export interface IExplorerState {
+  readonly page: number;
+  readonly selectedPage: number;
+  readonly query: string;
+  readonly total: number;
+  readonly swapHistory: ITransactions | null;
+  readonly isLoading: boolean;
+  readonly isHideWaiting: boolean;
+  readonly isNoResults: boolean;
+  readonly error: Error | null;
+  readonly fees: IFetchFees;
+  readonly info: IFetchInfoResponse | null;
+  readonly floats: IFetchFloatsResponse;
+  readonly platformStatus: IPlatformStatusResponse | null;
+}
 
-// export interface IFetchSwapHistoryRequest {
-//   query: string;
-//   page: number;
-// }
+export interface IFetchSwapHistoryRequest {
+  query: string;
+  page: number;
+}
 
-// export interface IFetchSwapHistoryResponse {
-//   items: SwapRawObject[];
-//   itemCount: number;
-//   total: number;
-// }
+export interface IFetchSwapHistoryResponse {
+  items: SwapRawObject[];
+  itemCount: number;
+  total: number;
+}
 
-// export interface ITransactions {
-//   data: {
-//     [page: number]: SwapRawObject[];
-//   };
-//   total: number;
-// }
+export interface ITransactions {
+  data: {
+    [page: number]: SwapRawObject[];
+  };
+  total: number;
+}
 
-// export interface IFetchFloatsResponse {
-//   btc: string;
-//   btcb: string;
-//   bnb: string;
-// }
-// export const InitialFloatsBalance: IFetchFloatsResponse = {
-//   btc: "0",
-//   btcb: "0",
-//   bnb: "0"
-// };
-// export interface IFloatsBalance {
-//   free: string;
-//   frozen: string;
-//   locked: string;
-//   symbol: string;
-// }
+export interface IFetchFloatsResponse {
+  btc: string;
+  btcb: string;
+  bnb: string;
+}
+export const InitialFloatsBalance: IFetchFloatsResponse = {
+  btc: "0",
+  btcb: "0",
+  bnb: "0",
+};
+export interface IFloatsBalance {
+  free: string;
+  frozen: string;
+  locked: string;
+  symbol: string;
+}
 
-// export type FloatBalanceArray = IFloatsBalance[];
+export type FloatBalanceArray = IFloatsBalance[];
 
-// export interface ITxrefs {
-//   tx_hash: string;
-//   block_height: number;
-//   tx_input_n: number;
-//   tx_output_n: number;
-//   value: number;
-//   ref_balance: number;
-//   confirmations: number;
-//   confirmed: string;
-//   double_spend: boolean;
-// }
+export interface ITxrefs {
+  tx_hash: string;
+  block_height: number;
+  tx_input_n: number;
+  tx_output_n: number;
+  value: number;
+  ref_balance: number;
+  confirmations: number;
+  confirmed: string;
+  double_spend: boolean;
+}
 
-// export type TxrefsArray = ITxrefs[];
+export type TxrefsArray = ITxrefs[];
 
-// export interface IFloatBalance {
-//   "BTC.B-888": string;
-//   "BTC.B-918": string;
-//   BNB: string;
-//   BTC: IBtcFloatBalance;
-// }
+export interface IFloatBalance {
+  "BTC.B-888": string;
+  "BTC.B-918": string;
+  BNB: string;
+  BTC: IBtcFloatBalance;
+}
 
-// export interface IBtcFloatBalance {
-//   confirmed: string;
-//   unconfirmed: string;
-// }
+export interface IBtcFloatBalance {
+  confirmed: string;
+  unconfirmed: string;
+}
 
 export const FETCH_SWAP_HISTORY_REQUEST =
   "@@explorer/FETCH_SWAP_HISTORY_REQUEST";
@@ -95,6 +95,9 @@ export const FETCH_FLOATS_SUCCESS = "@@explorer/FETCH_FLOATS_SUCCESS";
 export const FETCH_FLOATS_FAILURE = "@@explorer/FETCH_FLOATS_FAILURE";
 export const CHECK_TRANSACTION_LENGTH = "@@explorer/CHECK_TRANSACTION_LENGTH";
 export const TOGGLE_HIDE_WAITING = "@@explorer/TOGGLE_HIDE_WAITING";
+export const GO_TO_NEXT_PAGE = "@@explorer/GO_TO_NEXT_PAGE";
+export const GO_TO_BACK_PAGE = "@@explorer/GO_TO_BACK_PAGE";
+export const SET_QUERY = "@@explorer/SET_QUERY";
 
 export const TxStatus = {
   COMPLETED: "COMPLETED",

@@ -1,8 +1,7 @@
-import { createStore, applyMiddleware, compose } from "redux";
-import createSagaMiddleware from "redux-saga";
-import { reducer } from "./src/state/root-reducer";
+import { applyMiddleware, compose, createStore } from "redux";
 import { createLogger, LogEntryObject } from "redux-logger";
-import swapSaga from "./src/state/swap/sagas";
+import createSagaMiddleware from "redux-saga";
+import { rootReducer } from "./src/state/configureStore";
 
 declare global {
   interface Window {
@@ -40,7 +39,9 @@ export default function configureStore(initialState: any): any {
   );
 
   // @ts-ignore
-  const store = createStore(reducer, initialState, composeEnhancers);
-  store.runSaga = sagaMiddleware.run(swapSaga);
+  const store = createStore(rootReducer, initialState, composeEnhancers);
+  // @ts-ignore
+  store.runSaga = sagaMiddleware.run;
+  // store.runSaga = sagaMiddleware.run(swapSaga);
   return store;
 }

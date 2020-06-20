@@ -1,22 +1,21 @@
-import React from "react";
-import { Layout, Text } from "@ui-kitten/components";
-import { View, StyleSheet, Image, ScrollView } from "react-native";
-import { renderDateYearTime } from "../../utils/renderDateYearTime";
-import { coinId } from "../../utils/coinId";
-import { CoinSymbol } from "../../data/constants";
-import { calculateFixedFee } from "../../utils/calculateFixedFee";
-import { useSelector } from "react-redux";
-import { Reward } from "../../types/swapApp";
-import { Colors } from "../../data/colors";
 import { AntDesign } from "@expo/vector-icons";
+import { Divider, Layout, Text } from "@ui-kitten/components";
+import React from "react";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
+import { Colors } from "../../data/colors";
+import { CoinSymbol } from "../../data/constants";
+import { Reward } from "../../types/swapApp";
+import { calculateFixedFee } from "../../utils/calculateFixedFee";
+import { coinId } from "../../utils/coinId";
+import { renderDateYearTime } from "../../utils/renderDateYearTime";
 import { statusText } from "../../utils/status";
 
 const TransactionDetailScreen = ({ route }) => {
-  const { tx } = route.params;
+  const { tx, itemId } = route.params;
   const swap = useSelector((state) => state.swap);
   const { info, fees } = swap;
   const transactionFeePercent = info && info.swapInfo.feePercent;
-  console.log(tx.rewards);
 
   const coinName = (coin: string) => {
     switch (coin) {
@@ -44,30 +43,35 @@ const TransactionDetailScreen = ({ route }) => {
         break;
     }
   };
+
   return (
     <Layout style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.table}>
           <View style={styles.row}>
-            <Text style={styles.titleText}>Time Stamp</Text>
+            <Text style={styles.titleText}>Timestamp</Text>
             <Text style={styles.descriptionText}>
               {renderDateYearTime(tx.timestamp)}
             </Text>
           </View>
+          <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>Status</Text>
             <Text style={styles.descriptionText}>
               {statusText(tx.status, "p1")}
             </Text>
           </View>
+          <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>Inbound Transaction Hash</Text>
             <Text style={styles.descriptionText}>{tx.txIdIn}</Text>
           </View>
+          <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>Outbound Transaction Hash</Text>
             <Text style={styles.descriptionText}>{tx.txIdOut}</Text>
           </View>
+          <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>From</Text>
             <View style={styles.amountDescriptionView}>
@@ -80,6 +84,7 @@ const TransactionDetailScreen = ({ route }) => {
               <Text style={styles.addressText}>{tx.addressIn}</Text>
             </View>
           </View>
+          <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>To</Text>
             <View style={styles.amountDescriptionView}>
@@ -92,6 +97,7 @@ const TransactionDetailScreen = ({ route }) => {
               <Text style={styles.addressText}>{tx.addressOut}</Text>
             </View>
           </View>
+          <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>Transaction Fee</Text>
             <View style={styles.descriptionView}>
@@ -105,6 +111,7 @@ const TransactionDetailScreen = ({ route }) => {
               </Text>
             </View>
           </View>
+          <Divider />
           <View style={styles.row}>
             <Text style={styles.titleText}>Rewards Payout</Text>
             <View style={styles.rewardsView}>

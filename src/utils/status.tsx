@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     color: Colors.lightOrange,
   },
   signing: {
-    color: Colors.lightRed,
+    color: Colors.teal,
   },
   refunding: {
     color: Colors.pink,
