@@ -19,6 +19,7 @@ const Navigator = (): JSX.Element => {
       shadowColor: "transparent",
     },
     headerTintColor: "white",
+    headerBackTitleVisible: false,
   };
   return (
     <NavigationContainer>
