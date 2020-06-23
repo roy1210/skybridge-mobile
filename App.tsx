@@ -19,10 +19,12 @@ const App = () => {
   // @ts-ignore
   store.runSaga(rootSaga);
 
+  const themeMode = { ...eva.dark, ...theme };
+
   return (
     <Provider store={store}>
       <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
+      <ApplicationProvider {...eva} theme={themeMode}>
         <Navigator />
       </ApplicationProvider>
     </Provider>

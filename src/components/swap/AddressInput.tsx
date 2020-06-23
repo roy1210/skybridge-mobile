@@ -1,12 +1,17 @@
-import { Entypo, Feather } from "@expo/vector-icons";
+import { Entypo, Feather, Fontisto } from "@expo/vector-icons";
 import { Input, Text } from "@ui-kitten/components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import RBSheet from "react-native-raw-bottom-sheet";
 import { WToast } from "react-native-smart-tip";
 import { useDispatch } from "react-redux";
+import { Colors } from "../../data/colors";
 import { CoinSymbol } from "../../data/constants";
 import { inputReceivingAddress } from "../../state/swap/actions";
 import { isBinanceAddress, isBitcoinAddress } from "../../utils/validator";
+import AddressFavorite from "./modals/AddressFavorite";
+import { IUserAddresses } from "../../state/settings/types";
 interface Props {
   setIsValidAddress: (arg0: boolean) => void;
   setAddressValidationMessage: (string) => void;
@@ -14,6 +19,7 @@ interface Props {
   addressValidationMessage: string | undefined;
   isValidAddress: boolean;
   step: number;
+  userAddresses: IUserAddresses;
 }
 
 const AddressInput = (props: Props): JSX.Element => {
@@ -24,7 +30,9 @@ const AddressInput = (props: Props): JSX.Element => {
     setAddressValidationMessage,
     isValidAddress,
     step,
+    userAddresses,
   } = props;
+  const refAddressFavoriteSheet = useRef();
   const [value, setValue] = useState("");
   const dispatch = useDispatch();
 
@@ -74,7 +82,7 @@ const AddressInput = (props: Props): JSX.Element => {
 
   useEffect(() => {
     checkAddressHandler(value);
-  }, [value]);
+  }, [value, toCurrency]);
   return (
     <View>
       <Input
@@ -94,7 +102,31 @@ const AddressInput = (props: Props): JSX.Element => {
         }}
         status={addressValidationMessage !== "" ? "danger" : undefined}
       />
+      <View style={styles.favorite}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            refAddressFavoriteSheet.current.open();
+          }}
+        >
+          <Fontisto name="favorite" size={23} color="white" />
+        </TouchableWithoutFeedback>
+      </View>
       <Text style={styles.validation}>{validationMark()}</Text>
+      <RBSheet
+        ref={refAddressFavoriteSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: Colors.transparent,
+          },
+          draggableIcon: {
+            backgroundColor: Colors.grey,
+          },
+        }}
+      >
+        <AddressFavorite setValue={setValue} userAddresses={userAddresses} />
+      </RBSheet>
     </View>
   );
 };
@@ -105,12 +137,17 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   inputText: {
-    marginRight: 24,
+    marginRight: 38,
   },
   validation: {
     position: "absolute",
-    right: 6,
+    right: 22,
     top: 48,
+  },
+  favorite: {
+    position: "absolute",
+    top: 50,
+    right: 6,
   },
 });
 

@@ -26,5 +26,12 @@
     },
     "userInterfaceStyle": "automatic",
     "description": ""
+  },
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "org.swallow.rnsample.app"
+  },
+  "android": {
+    "package": "org.swallow.rnsample.app"
   }
 }

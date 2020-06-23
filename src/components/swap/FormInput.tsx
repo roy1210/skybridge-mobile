@@ -52,7 +52,6 @@ const FormInput = (props: Props): JSX.Element => {
       <View style={styles.currency}>
         <TouchableWithoutFeedback
           onPress={() => {
-            // setIsCoinModalWakeUp(true);
             refSelectCoinSheet.current.open();
           }}
         >

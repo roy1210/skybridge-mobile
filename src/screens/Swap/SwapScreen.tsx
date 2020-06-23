@@ -1,11 +1,13 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-community/async-storage";
 import { Button, Layout, Modal, Text } from "@ui-kitten/components";
 import React, { useEffect, useState } from "react";
-import { Keyboard, StyleSheet, View, Image, Platform } from "react-native";
+import { Image, Keyboard, Platform, StyleSheet, View } from "react-native";
 import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
+import { WToast } from "react-native-smart-tip";
 import { useDispatch, useSelector } from "react-redux";
 import AddressInput from "../../components/swap/AddressInput";
 import FormGet from "../../components/swap/FormGet";
@@ -13,26 +15,26 @@ import FormInput from "../../components/swap/FormInput";
 import ModalTransaction from "../../components/swap/modals/ModalTransaction";
 import { Colors } from "../../data/colors";
 import {
+  CoinSymbol,
   MAXIMUM_SWAP_AMOUNT,
   MINIMUM_SWAP_AMOUNT,
-  CoinSymbol,
 } from "../../data/constants";
+import { fetchSwapHistoryAsync } from "../../state/explorer/actions";
 import {
+  fetchUserAddressesAsync,
+  setUserBtcAddress,
+  setUserBtcbAddress,
+  setUserAddress,
+} from "../../state/settings/actions";
+import {
+  fetchDepositAddressAsync,
   fetchFeesAsync,
+  fetchInfoAsync,
   fetchPriceAsync,
   goNextStep,
-  fetchInfoAsync,
-  fetchDepositAddressAsync,
   goToBTCBTransferStep,
 } from "../../state/swap/actions";
 import { addComma } from "../../utils/addComma";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { WToast } from "react-native-smart-tip";
-import {
-  fetchSwapHistoryAsync,
-  fetchSwapHistoryAsync_Request,
-  fetchFloatsAsync,
-} from "../../state/explorer/actions";
 
 const SwapScreen = ({ navigation }): JSX.Element => {
   const swap = useSelector((state) => state.swap);
@@ -50,14 +52,74 @@ const SwapScreen = ({ navigation }): JSX.Element => {
     step,
   } = swap;
 
+  const settings = useSelector((state) => state.settings);
+  const { userAddresses } = settings;
+
   const dispatch = useDispatch();
+  // const getUserAddresses = async () => {
+  //   let addresses = {
+  //     btc: "",
+  //     btcb: "",
+  //   };
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem("userAddresses");
+  //     const parsedUserAddresses = JSON.parse(String(jsonValue));
+  //     addresses = {
+  //       btc: parsedUserAddresses.btc !== null ? parsedUserAddresses.btc : "",
+  //       btcb:
+  //         parsedUserAddresses.btcb !== null
+  //           ? parsedUserAddresses.btcb
+  //           : "Has not found",
+  //     };
+  //     return addresses;
+  //   } catch (e) {
+  //     console.error("error");
+  //   }
+  // };
+  async function fetchUserData() {
+    let addresses = {
+      btc: "",
+      btcb: "",
+    };
+    // try {
+    // const btcAddress = await AsyncStorage.getItem("userBtcAddress");
+    // const btcbAddress = await AsyncStorage.getItem("userBtcbAddress");
+    // const addresses = {
+    //   btc: btcAddress ? btcAddress : "",
+    //   btcb: btcbAddress ? btcbAddress : "",
+    // };
+    // return addresses;
+
+    try {
+      const jsonValue = await AsyncStorage.getItem("userAddresses");
+      const parsedUserAddresses = JSON.parse(String(jsonValue));
+      addresses = {
+        btc: parsedUserAddresses.btc !== null ? parsedUserAddresses.btc : "",
+        btcb:
+          parsedUserAddresses.btcb !== null
+            ? parsedUserAddresses.btcb
+            : "Has not found",
+      };
+      return addresses;
+    } catch (e) {
+      console.error("error");
+    }
+  }
+
   useEffect(() => {
     dispatch(fetchPriceAsync.request());
+    fetchUserData().then((address) => {
+      dispatch(setUserAddress(address));
+      // @ts-ignore
+      // dispatch(setUserBtcAddress(String(address.btc)));
+      // @ts-ignore
+      // dispatch(setUserBtcbAddress(String(address.btcb)));
+    });
     dispatch(fetchFeesAsync.request());
     dispatch(fetchInfoAsync.request());
     dispatch(fetchDepositAddressAsync.request());
     dispatch(fetchSwapHistoryAsync.request({ query: "", page: 0 }));
-    dispatch(fetchFloatsAsync.request());
+    // dispatch(fetchFloatsAsync.request());
   }, []);
 
   useEffect(() => {
@@ -126,6 +188,7 @@ const SwapScreen = ({ navigation }): JSX.Element => {
               addressValidationMessage={addressValidationMessage}
               setAddressValidationMessage={setAddressValidationMessage}
               isValidAddress={isValidAddress}
+              userAddresses={userAddresses}
             />
             <View style={styles.addressAttention}>
               <FontAwesome5

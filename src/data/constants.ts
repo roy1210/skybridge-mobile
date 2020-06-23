@@ -14,3 +14,15 @@ export const CoinSymbol = {
   BTC_B_888: "BTC.B-888",
   BNB: "BNB",
 };
+
+export const Navigation = {
+  Swap: "SWAP",
+  Explorer: {
+    Explorer: "EXPLORER",
+    Transaction: "TRANSACTION",
+  },
+  Settings: {
+    Settings: "SETTINGS",
+    MyAddresses: "MY ADDRESSES",
+  },
+};
